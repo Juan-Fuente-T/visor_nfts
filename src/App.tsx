@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 // import { ethers, JsonRpcProvider } from 'ethers';
 import axios from 'axios'
 import { abi } from './assets/abis/erc1155'
+import { abi721 } from './assets/abis/erc721'
 // import { CONTRACT_ADDRESS } from './constants';
 import { useAccount, useReadContract } from 'wagmi'
 import { Address } from 'viem'
@@ -24,63 +25,97 @@ function NFTViewer(): JSX.Element {
   const [contractAddress, setContractAddress] = useState<Address | undefined>(undefined)
   const [tokenId, setTokenId] = useState('')
   const [nftData, setNftData] = useState<NFTData | null>(null)
-  const { address, isConnected } = useAccount()
+  const { address, isConnected } = useAccount();
+  const [error, setError] = useState('')
 
   const isValidAddress = (address: string) => {
     return /^0x[a-fA-F0-9]{40}$/.test(address);
   }
   
   const {
-      data: uri,
-      isLoading,
-    refetch,
+    data: uri721,
+    refetch: refetch721,
+    isError: isError721,
   } = useReadContract({
-    abi,
-    address: contractAddress && isValidAddress(contractAddress) ? contractAddress : undefined, // Validación address
+    address: contractAddress && isValidAddress(contractAddress) ? contractAddress : undefined,
+    abi: abi721,
+    functionName: 'tokenURI',
+    args: [tokenId],
+  });
+
+  // Leer URI del contrato ERC-1155
+  const {
+    data: uri1155,
+    refetch: refetch1155,
+    isError: isError1155,
+  } = useReadContract({
+    address: contractAddress && isValidAddress(contractAddress) ? contractAddress : undefined,
+    abi: abi,
     functionName: 'uri',
-    args: [tokenId]
-  })
+    args: [tokenId],
+  });
+ 
+
   const fetchNFTData = async () => {
     if (!contractAddress || !tokenId) {
-      return
+      setError('Contract address and Token ID are required');
+      return;
     }
-    // const provider = new JsonRpcProvider(
-    //     // import.meta.env.REACT_APP_ARBITRUM_SEPOLIA_RPC_URL
-    //     // process.env.REACT_APP_ARBITRUM_SEPOLIA_RPC_URL
-    //     process.env.REACT_APP_SEPOLIA_RPC_URL
-    //   );
-    // const contract = new ethers.Contract(contractAddress, abi, provider);
-    
+    if (!isValidAddress(contractAddress)) {
+      setError('Invalid contract address');
+      return;
+    }
+
+    setError('');
+    setNftData(null);
+
     try {
-        console.log('Control')
-        console.log('Address', contractAddress)
-        if (!isValidAddress(contractAddress)) {
-          console.error('Dirección no válida:', contractAddress);
-          return;
+      let uri: string | undefined;
+
+      await refetch1155();
+      if (!isError1155) {
+        uri = uri1155 as string;
+      } else {
+        await refetch721();
+        if (!isError721) {
+          uri = uri721 as string;
         }
-        //   console.log("DATA", data);
-        console.log('Address conectada', address)
-        
-        // const uri = await contract?.uri(tokenId);
-        // console.log("URI", uri);
-        //   const cosa = await contract?.getAddress();
-        //   console.log("Cosa", cosa);
-        //   const uri: string = data;
-        if (typeof uri === 'string' && uri.startsWith('http')) {
-            console.log('URI', uri)
-            //   const response = await axios.get(`https://gateway.pinata.cloud/ipfs/${uri?.split('/').pop()}`);
-            const response = await axios.get(uri)
-            
-            console.log('Response', response)
-            setNftData(response.data)
-            console.log('Response.data', response.data)
-            console.log('NFTDAta', await nftData)
-            refetch()
+      }
+      // await refetch721();
+      // if (!isError721) {
+      //   uri = uri721 as string;
+      // } else {
+      //   await refetch1155();
+      //   if (!isError1155) {
+      //     uri = uri1155 as string;
+      //   }
+      // }
+
+      if (uri && typeof uri === 'string' && uri.startsWith('http')) {
+        // const response = await axios.get(uri);
+        console.log("URI", uri);
+    
+        const baseIpfsUrl = 'https://ipfs.io/ipfs/';
+        // Verifica si el URI comienza con la URL base de IPFS
+        console.log("baseIpfsUrl", baseIpfsUrl);
+        if (uri.startsWith(baseIpfsUrl)) {
+            let tempUri = uri.slice(baseIpfsUrl.length); // Retorna el URI sin la parte base
+            uri = `https://gateway.pinata.cloud/ipfs/${tempUri}`;
         }
-    } catch (error) {
-      console.error('Error fetching NFT data:', error)
+        console.log("URIDESP", uri);
+        // const response = await axios.get(`https://gateway.pinata.cloud/ipfs/${uri?.split('/').pop()}`);
+        const response = await axios.get(uri);
+        console.log("Responde", response);
+        setNftData(response.data);
+        console.log("Responde.DATA", response.data);
+      } else {
+        setError('Invalid URI');
+      }
+    } catch (err) {
+      console.error('Error fetching NFT data:', err);
+      setError('Error fetching NFT data');
     }
-  }
+  };
 
   return (
     <div className="container">
@@ -108,6 +143,7 @@ function NFTViewer(): JSX.Element {
 
       {nftData && (
         <div className="nft-container">
+          <h2>Address conectada: {address}</h2>
           <img src={nftData.image} alt={nftData.name} />
           <h2>Nombre de la tarjeta: {nftData.name}</h2>
           <p>Descripción: {nftData.description}</p>
