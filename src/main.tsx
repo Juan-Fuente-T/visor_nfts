@@ -7,7 +7,7 @@ import {
   darkTheme,
   getDefaultConfig,
 } from '@rainbow-me/rainbowkit'
-import { sepolia } from 'wagmi/chains'
+import { arbitrum, arbitrumNova, arbitrumSepolia, mainnet, optimism, optimismSepolia, polygon, polygonAmoy, sepolia } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { ToastContainer } from 'react-toastify'
@@ -19,7 +19,7 @@ const queryClient = new QueryClient()
 export const config = getDefaultConfig({
   appName: 'EducatETH DAPP',
   projectId: import.meta.env.VITE_PROJECT_ID,
-  chains: [sepolia],
+  chains: [mainnet, sepolia, arbitrum, arbitrumNova, arbitrumSepolia, polygon, polygonAmoy, optimism, optimismSepolia],
 })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

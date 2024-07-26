@@ -20,6 +20,18 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   width: 300px; /* Ancho fijo para el contenedor */
 }
+.containerInputs {
+  display: flex;
+  flex-direction: row;
+}
+#input1 {
+  width: 80%;
+}
+#input2 {
+  width: 20%;
+  margin-left: 2%;
+  padding-right: 12px;
+}
 
 .container h1 {
   text-align: center;
@@ -99,4 +111,20 @@ button:hover {
   font-size: 1.2em;
   font-weight: bold;
   color: #cccccc; /* Color de descripción */
+}
+
+.containerButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 6px;
+  padding: 12px;
+  margin: 10px 0;
+  /* border: none; */
+  border-radius: 5px;
+  background-color: #333;
+  /* color: #ffffff; */
+  /* font-size: 16px; */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
