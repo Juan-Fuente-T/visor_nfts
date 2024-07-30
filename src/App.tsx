@@ -9,6 +9,7 @@ import { useAccount, useReadContract } from 'wagmi'
 import { Address } from 'viem'
 import { getChainId } from 'wagmi/actions'
 import { config } from './main'
+import viteConfig from '../vite.config'
 // import { abi } from "./assets/abis/erc20";
 // import { CONTRACT_ADDRESS } from "./assets/constants/index";
 
@@ -196,7 +197,7 @@ function NFTViewer(): JSX.Element {
         <button onClick={() => fetchNFTData("1155")}>Visualizar tarjeta 1155</button>
         <button onClick={() => fetchNFTData('721')}>Visualizar tarjeta 721</button>
       </div>
-      {nftData && (
+      {nftData? (
         <div className="nft-container">
           {/* <h2>Address conectada: {address}</h2> */}
           <img src={nftData.image} alt={nftData.name} />
@@ -208,7 +209,7 @@ function NFTViewer(): JSX.Element {
                     </div>
                 ))}
         </div>
-      )}
+      ) : <img id='portada' src='./visor_de_tarjetas.png' alt='Imagen de un visualizar de tarjetas digitales y nfts'/>}
     </div>
   )
 }
