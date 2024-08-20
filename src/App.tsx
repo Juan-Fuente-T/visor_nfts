@@ -28,10 +28,12 @@ function NFTViewer(): JSX.Element {
   const [contractAddress, setContractAddress] = useState<Address | ''>('')
   const [tokenId, setTokenId] = useState('1')
   const [nftData, setNftData] = useState<NFTData | null>(null)
-  const { address, isConnected } = useAccount();
-  const [error, setError] = useState('');
+  // const { address, isConnected } = useAccount();
+  const [imageUrl, setImageUrl] = useState('./visor_de_tarjetas.png')
+  const [, setError] = useState('');
   // const [type, setType] = useState<'1155' | '721'>('1155');
-  const [chainId, setChainId] = useState(0);
+  const [, setChainId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const isValidAddress = (address: string) => {
     return /^0x[a-fA-F0-9]{40}$/.test(address);
   }
@@ -59,6 +61,13 @@ function NFTViewer(): JSX.Element {
     args: [tokenId],
   });
  
+  const Spinner = () => (
+    <div className="spinner">
+      <div className="bounce1"></div>
+      <div className="bounce2"></div>
+      <div className="bounce3"></div>
+    </div>
+  );
 
   const fetchNFTData = async (type: '1155' | '721') => {
     if (!contractAddress || !tokenId) {
@@ -69,26 +78,35 @@ function NFTViewer(): JSX.Element {
       setError('Invalid contract address');
       return;
     }
-
+    
+    setImageUrl('./visor_de_tarjetas.png');
     setError('');
     setNftData(null);
-    console.log("TYPE", type);
+    setIsLoading(true);
     try {
       let uri: string | undefined;
-
+      
       if(type === "1155"){
+        setImageUrl('./visor_de_tarjetas_no1155.png');
         await refetch1155();
       if (!isError1155) {
         uri = uri1155 as string;
         console.log("URI1155:", uri)
+      }else{
+        console.log("NO ES UN 1155")
+        // setImageUrl('./visor_de_tarjetas_no1155.png');
       }
     }else {
+      setImageUrl('./visor_de_tarjetas_no721.png');
       await refetch721();
       if (!isError721) {
         uri = uri721 as string;
         console.log("URI721:", uri)
+      }else{
+        console.log("NO ES UN 721")
+        // setImageUrl('./visor_de_tarjetas_no721.png');
       }
-      }
+    }
   // const fetchNFTData721 = async (type) => {
   //   if (!contractAddress || !tokenId) {
   //     setError('Contract address and Token ID are required');
@@ -145,6 +163,8 @@ function NFTViewer(): JSX.Element {
     } catch (err) {
       console.error('Error fetching NFT data:', err);
       setError('Error fetching NFT data');
+    } finally {
+      setIsLoading(false); // Finaliza la carga, independientemente del resultado
     }
   };
   useEffect(() => {
@@ -152,7 +172,6 @@ function NFTViewer(): JSX.Element {
       try {
         const chainId = await getChainId(config);
         setChainId(chainId);
-        console.log("XXX",chainId);
       } catch (error) {
         console.error("Error fetching chain ID:", error);
       }
@@ -172,7 +191,8 @@ function NFTViewer(): JSX.Element {
 
   return (
     <div className="container">
-      <h1>VISOR DE TARJETAS</h1>
+      <h1>VISOR DE NFTs</h1>
+      <h3>Visualiza cualquier NFT alojado en IPFS</h3>
     <div className='containerInputs'>
       <input
         id='input1'
@@ -188,29 +208,38 @@ function NFTViewer(): JSX.Element {
         value={tokenId}
         min={0}
         onChange={(e) => setTokenId(e.target.value)}
-      />
+        />
       </div>
       {/* <button onClick={{fetchNFTData721; setType("721")}}>Visualizar tarjeta</button> */}
       {/* <button onClick={handleButtonClick721}>Visualizar tarjeta</button> */}
       {/* <button onClick={handleButtonClick1155}>Visualizar tarjeta 1155</button> */}
       <div className='containerButtons'>
-        <button onClick={() => fetchNFTData("1155")}>Visualizar tarjeta 1155</button>
-        <button onClick={() => fetchNFTData('721')}>Visualizar tarjeta 721</button>
+        <button onClick={() => fetchNFTData("1155")}>Visualizar NFT ERC-1155</button>
+        <button onClick={() => fetchNFTData('721')}>Visualizar NFT ERC-721</button>
       </div>
-      {nftData? (
-        <div className="nft-container">
-          {/* <h2>Address conectada: {address}</h2> */}
-          <img src={nftData.image} alt={nftData.name} />
-          <h2>Nombre de la tarjeta: {nftData.name}</h2>
-          <p>Descripción: {nftData.description}</p>
-          {nftData?.attributes?.map((attr, idx) => (
-                    <div className="attributes" key={idx}>
-                        <strong>{attr.trait_type}:</strong> {attr.value}
-                    </div>
-                ))}
+      
+      {isLoading ? (
+        <div className="loading-container">
+          <img id='portada' src={imageUrl} alt='Imagen de un visualizar de tarjetas digitales y nfts'/>
+          <div className="spinner-overlay">
+            <Spinner />
+          </div>
         </div>
-      ) : <img id='portada' src='./visor_de_tarjetas.png' alt='Imagen de un visualizar de tarjetas digitales y nfts'/>}
-    </div>
+      ) : nftData ? (
+        <div className="nft-container">
+          <img src={nftData?.image} alt={nftData?.name} />
+          <h2>Nombre: {nftData?.name}</h2>
+          <p>Descripción: {nftData?.description}</p>
+          {nftData?.attributes?.map((attr, idx) => (
+            <div className="attributes" key={idx}>
+              <strong>{attr.trait_type}:</strong> {attr.value}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <img id='portada' src={imageUrl} alt='Imagen de un visualizar de tarjetas digitales y nfts'/>
+      )}
+      </div>     
   )
 }
 

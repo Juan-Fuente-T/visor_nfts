@@ -17,7 +17,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 const queryClient = new QueryClient()
 
 export const config = getDefaultConfig({
-  appName: 'EducatETH DAPP',
+  appName: 'VISOR DE NFTs',
   projectId: import.meta.env.VITE_PROJECT_ID,
   chains: [mainnet, sepolia, arbitrum, arbitrumNova, arbitrumSepolia, polygon, polygonAmoy, optimism, optimismSepolia],
 })
