@@ -1,21 +1,32 @@
-# Integración de Smart Contracts con Frontend
+# NFT Viewer
 
-Este repositorio contiene el código de una clase sobre cómo integrar smart contracts con el frontend utilizando las tecnologías [Wagmi](https://wagmi.sh/react/getting-started), [Viem](https://viem.sh/docs/getting-started), [Rainbowkit](https://www.rainbowkit.com/docs/installation) y [React](https://react.dev/learn). Aquí aprenderás a conectar tu aplicación web con la blockchain de manera eficiente y segura.
+NFT Viewer is a web application that allows users to view any NFT (ERC-721 or ERC-1155) stored on IPFS. Simply input the contract address and token ID, and the app will display the NFT's image and metadata.
 
-## Descripción General
+## Table of Contents
 
-La integración de smart contracts con el frontend es esencial para crear aplicaciones descentralizadas (dApps) que interactúen directamente con la blockchain. En esta clase, utilizaremos Wagmi y Rainbowkit para simplificar esta integración, proporcionando herramientas y librerías que facilitan la conexión y gestión de wallets.
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Technologies Used](#technologies-used)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Tecnologías Utilizadas
+## Screenshots
 
-- **Wagmi**: Una colección de hooks y herramientas para trabajar con wallets y contratos en aplicaciones React.
-- **Viem**: Una librería que proporciona una API simple y robusta para interactuar con la blockchain.
-- **Rainbowkit**: Una herramienta que facilita la integración de múltiples wallets en tu aplicación.
-- **React**: Una biblioteca de JavaScript para construir interfaces de usuario.
+!["View of an application to view NFT"](Visor_de_NFTs-1.png)
 
-## Estructura del Proyecto
+!["Application viewing an NFT hosted on IPFS"](Visor_de_NFTs-2.png)
 
-El proyecto sigue una estructura modular para mantener el código organizado y fácil de mantener:
+## Features
+
+- View ERC-721 and ERC-1155 NFTs
+- Support for NFTs stored on IPFS
+- User-friendly interface
+- Real-time error handling and feedback
+- Loading indicator for better user experience
+
+## Project Estructure
 
 ```
 .
@@ -31,42 +42,63 @@ El proyecto sigue una estructura modular para mantener el código organizado y f
 ├── vite.config.ts
 ```
 
-## Beneficios de Usar este Stack
+## Installation
 
-- **Facilidad de Integración**: Wagmi y Rainbowkit simplifican la integración con múltiples wallets y contratos inteligentes.
-- **Interfaz de Usuario Amigable**: Rainbowkit proporciona una interfaz intuitiva para la gestión de wallets.
-- **Desarrollo Rápido**: React permite construir interfaces de usuario rápidas y dinámicas.
-- **Escalabilidad**: La estructura modular del proyecto facilita la expansión y mantenimiento a medida que crece la aplicación.
+To set up the NFT Viewer locally, follow these steps:
 
-## Instrucciones para Correr el Proyecto
+1. Clone the repository:
 
-Para correr el proyecto localmente, sigue estos pasos:
+git clone https://github.com/Juan-Fuente-T/visor_nfts
 
-1. Clona el repositorio:
+2. Navigate to the project directory:
 
-   ```bash
-   git clone https://github.com/chrisarevalo11/curso-dapps-frontend.git
-   cd curso-dapps-frontend
-   ```
+3. Install the dependencies:
 
-2. Instala las dependencias:
+npm install
 
-   ```bash
-   yarn install
-   ```
+4. Create a `.env` file in the root directory and add your environment variables:
 
-3. Crea un archivo `.env` en la raíz del proyecto y agrega la variable de entorno `VITE_PROJECT_ID`. Puedes obtener un project ID en [WalletConnect Cloud](https://cloud.walletconnect.com/):
+VITE_SEPOLIA_RPC_URL=your alchemy api key
+VITE_WALLET_PRIVATE_KEY=your address's private key
 
-   ```env
-   VITE_PROJECT_ID=tu_project_id
-   ```
+5. Start the development server:
 
-4. Inicia la aplicación:
+npm vite
 
-   ```bash
-   yarn dev
-   ```
+The application should now be running on `http://localhost:5173`.
 
-5. Abre tu navegador y navega a `http://localhost:5173` para ver la aplicación en funcionamiento.
+## Usage
 
-Gracias por llegar hasta acá y **keep buidling**!
+1. Open the NFT Viewer in your web browser.
+2. Enter the contract address of the NFT in the "Contract Address" field.
+3. Enter the token ID of the NFT in the "Token ID" field.
+4. Click either the "View ERC-721 NFT" or "View ERC-1155 NFT" button, depending on the type of NFT you're trying to view.
+5. If you're unsure of the NFT type, try both buttons.
+6. If the NFT is stored on IPFS and the information is correct, the image and metadata will be displayed.
+7. If there's an error or the NFT can't be found, an error message will be shown.
+
+## Technologies Used
+
+- React.js
+- Vite
+- ethers.js
+- Axios
+- IPFS
+- Wagmi
+- Viem
+
+## Contributing
+
+Contributions to the NFT Viewer are welcome! Please follow these steps to contribute:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please ensure your code adheres to the existing style and that you've tested your changes thoroughly.
+
+## License
+
+This project is licensed under the MIT License
