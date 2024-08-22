@@ -1,15 +1,14 @@
 import './App.css'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 // import { ethers, JsonRpcProvider } from 'ethers';
 import axios from 'axios'
 import { abi } from './assets/abis/erc1155'
 import { abi721 } from './assets/abis/erc721'
 // import { CONTRACT_ADDRESS } from './constants';
-import { useAccount, useReadContract } from 'wagmi'
+import { useReadContract } from 'wagmi'
 import { Address } from 'viem'
 import { getChainId } from 'wagmi/actions'
 import { config } from './main'
-import viteConfig from '../vite.config'
 // import { abi } from "./assets/abis/erc20";
 // import { CONTRACT_ADDRESS } from "./assets/constants/index";
 
