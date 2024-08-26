@@ -192,22 +192,25 @@ function NFTViewer(): JSX.Element {
     <div className="container">
       <h1>VISOR DE NFTs</h1>
       <h3>Visualiza cualquier NFT alojado en IPFS</h3>
-    <div className='containerInputs'>
-      <input
-        id='input1'
-        type="text"
-        placeholder="Identificador de la tarjeta"
-        value={contractAddress}
-        onChange={(e) => {setContractAddress(e.target.value as Address)}}
-      />
-      <input
-        id='input2'
-        type="number"
-        placeholder="Numero del identicador"
-        value={tokenId}
-        min={0}
-        onChange={(e) => setTokenId(e.target.value)}
+      <div>
+      <h4>Introduce la dirección del contrato del NFT y su Id</h4>
+      <div className='containerInputs'>
+        <input
+          id='input1'
+          type="text"
+          placeholder="Direccion del smart contract"
+          value={contractAddress}
+          onChange={(e) => {setContractAddress(e.target.value as Address)}}
         />
+        <input
+          id='input2'
+          type="number"
+          placeholder="Numero del identicador"
+          value={tokenId}
+          min={0}
+          onChange={(e) => setTokenId(e.target.value)}
+          />
+        </div>
       </div>
       {/* <button onClick={{fetchNFTData721; setType("721")}}>Visualizar tarjeta</button> */}
       {/* <button onClick={handleButtonClick721}>Visualizar tarjeta</button> */}
